@@ -119,3 +119,4 @@ day %in% c("Saturday","Sunday") ~ "weekend")
   )
 ```
 
+This dataset consists of data from an accelerometer, tracking the activity of a 63-year-old male who was diagnosed with congestive heart failure. The dataset has `r nrow(accel_tidy_df)` rows and `r ncol(accel_tidy_df)` columns. We can see the `activity_amount` for each `minute_of_day` across a five-week period. Each observation is a minute during this time frame, and there are `r nrow(accel_tidy_df)` such observations. Other variables include the `week` number (out of 5 weeks), the `day` of the week, and a variable that tells us whether the activity took place on the weekend or weekday.
