@@ -89,3 +89,25 @@ pivot_wider(
   knitr::kable()
 ```
 
+## Problem 2
+
+First, read the data.
+
+```{r accel_df}
+accel_df =
+  read_csv("data/accel_data.csv")
+```
+
+Let's tidy the data.
+
+```{r tidy}
+accel_tidy_df =
+  pivot_longer(
+    accel_df,
+    activity.1:activity.1440,
+    names_to = "minute_of_day",
+    values_to = "activity_amount"
+  ) %>% 
+  gsub('activity.', '', minute_of_day)
+```
+
