@@ -108,6 +108,14 @@ accel_tidy_df =
     names_to = "minute_of_day",
     values_to = "activity_amount"
   ) %>% 
-  gsub('activity.', '', minute_of_day)
+  mutate(minute_of_day = gsub('activity.', '', minute_of_day)) %>%
+  mutate(minute_of_day = as.numeric(minute_of_day)) %>% 
+  mutate(day = as.factor(day),
+         day = forcats::fct_relevel(day, c("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"))
+  ) %>% 
+  mutate(weekend_weekday = case_when(
+day %in% c("Monday","Tuesday","Wednesday","Thursday","Friday") ~ "weekday",
+day %in% c("Saturday","Sunday") ~ "weekend")
+  )
 ```
 
