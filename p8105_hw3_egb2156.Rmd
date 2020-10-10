@@ -113,10 +113,21 @@ accel_tidy_df =
   mutate(day = as.factor(day),
          day = forcats::fct_relevel(day, c("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"))
   ) %>% 
-  mutate(weekend_weekday = case_when(
-day %in% c("Monday","Tuesday","Wednesday","Thursday","Friday") ~ "weekday",
-day %in% c("Saturday","Sunday") ~ "weekend")
+  mutate(weekend_weekday = 
+           case_when(
+             day %in% c("Monday","Tuesday","Wednesday","Thursday","Friday") ~ "weekday",
+             day %in% c("Saturday","Sunday") ~ "weekend"
+           )
   )
 ```
 
 This dataset consists of data from an accelerometer, tracking the activity of a 63-year-old male who was diagnosed with congestive heart failure. The dataset has `r nrow(accel_tidy_df)` rows and `r ncol(accel_tidy_df)` columns. We can see the `activity_amount` for each `minute_of_day` across a five-week period. Each observation is a minute during this time frame, and there are `r nrow(accel_tidy_df)` such observations. Other variables include the `week` number (out of 5 weeks), the `day` of the week, and a variable that tells us whether the activity took place on the weekend or weekday.
+
+Total activity per day:
+
+```{r total_per_day}
+accel_tidy_df %>% 
+  group_by(day_id) %>% 
+  summarize(activity_day = sum(activity_amount)) %>% 
+  knitr::kable()
+```
