@@ -160,5 +160,53 @@ Based on this graph, which shows the activity over the course of the day (for al
 
 # Problem 3
 
+Load the data.
 
+```{r read_data}
+library(p8105.datasets)
+data("ny_noaa")
+```
+
+This dataset has `r nrow(ny_noaa)` rows and `r ncol(ny_noaa)` columns. Important variables include the `id` of the weather station, the `date` of each observation, the precipitation, snowfall, snow depth, and maximum and minimum temperatures. All of the observations took place in the state of New York. We should note that there are a lot of missing values.
+
+Let's clean this data.
+
+```{r clean_df}
+ny_noaa = ny_noaa %>%
+  separate(date, into = c("year", "month", "day"), convert = TRUE)
+
+head(ny_noaa)
+
+ny_noaa_clean =
+  na.omit(ny_noaa) %>% 
+  mutate(prcp = prcp * .1) %>% 
+  mutate(tmax = as.numeric(tmax),
+         tmin = as.numeric(tmin)
+         ) %>% 
+  mutate(tmax = tmax * .1,
+         tmin = tmin * .1
+         )
+
+ny_noaa_clean %>% 
+  filter(snow > 0) %>%
+  pull(snow) %>%
+  median()
+
+```
+
+The median snowfall is 25mm.
+
+```{r}
+ny_noaa_clean %>%
+    mutate(month = month.name[month]) %>%
+    filter(month %in% c("January", "July")) %>%
+    group_by(year, month, id) %>%
+    summarize(avg_max_tmp = mean(tmax)) %>%
+    ggplot(aes(x = year, y = avg_max_tmp)) +
+    geom_point(alpha = .5) +
+    geom_line(alpha = .5) +
+    facet_grid(~ month)
+```
+
+As expected, we can see the difference in temperatures between January and July, with July being much higher. There's not a pattern of particular note - both months tend to fluctuate from year to year. Both have a few outliers - January has a few particularly low temperatures around 1982 and 1996. July has one particularly low temperature in 1988. 
 
